@@ -1,0 +1,66 @@
+const carouselConfig = {
+    slidesPerView: 1,
+    spaceBetween: 10,
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true
+    },
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev"
+    },
+    breakpoints: {
+        700: {
+            slidesPerView: 2,
+            spaceBetween: 15
+        },
+        1100: {
+            slidesPerView: 3,
+            spaceBetween: 20
+        }
+    }
+};
+const swiper = new Swiper("#pricing-carousel", carouselConfig);
+const headers = document.querySelectorAll(
+    ".pricing-item-content .group-header"
+);
+
+function matchHeight() {
+    // eslint-disable-line
+    const cols = document.querySelectorAll("[data-mh]");
+    const encountered = [];
+
+    for (let i = 0; i < cols.length; i++) {
+        const attr = cols[i].getAttribute("data-mh");
+
+        if (encountered.indexOf(attr) === -1) {
+            encountered.push(attr);
+        }
+    }
+
+    for (let set = 0; set < encountered.length; set++) {
+        const col = document.querySelectorAll(
+            '[data-mh="' + encountered[set] + '"]'
+        );
+        const group = [];
+
+        for (let i = 0; i < col.length; i++) {
+            col[i].style.height = "auto";
+            group.push(col[i].scrollHeight);
+        }
+
+        for (let n = 0; n < col.length; n++) {
+            col[n].style.height = Math.max.apply(Math, group) + "px";
+        }
+    }
+}
+
+matchHeight();
+window.addEventListener("resize", matchHeight);
+
+headers.forEach((pt_header) => {
+    pt_header.addEventListener("click", function () {
+        $(pt_header).toggleClass("active");
+        $(pt_header).parent().find(".inner").slideToggle();
+    });
+});
